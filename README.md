@@ -15,7 +15,7 @@ Low-level access to RP2040 hardware registers in Micropython using uctypes
   - [ ] Sysinfo (2.20.2)
   - [ ] Syscfg (2.21.2)
 - [ ] DMA (2.5.7)
-- [ ] GPIO (2.19.6)
+- [X] GPIO (2.19.6)
 - [x] PIO (3.7)
 - Peripherals
   - [ ] USB (4.1.4)
