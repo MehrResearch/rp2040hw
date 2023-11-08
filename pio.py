@@ -138,3 +138,13 @@ PIO_REGS = {
 
 pios = [struct(addr, PIO_REGS) for addr in PIO_BASE]
 
+def clkdiv(target_freq, clk_freq=125e6):
+    """
+    Calculate the integer and fractional dividers for a given target frequency
+    and clock frequency (default 125MHz).
+    """
+    divider = clk_freq / target_freq
+    assert 1 <= divider <= 65536
+    int_divider = int(divider)
+    frac_divider = int((divider - int_divider) * 256)
+    return (int_divider, frac_divider)
