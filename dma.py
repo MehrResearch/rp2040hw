@@ -29,11 +29,11 @@ DMA_CTRL_FIELDS = {
     "TREQ_SEL":         15 << BF_POS | 6 << BF_LEN | BFUINT32, # Transfer Request signal select
     "CHAIN_TO":         11 << BF_POS | 4 << BF_LEN | BFUINT32, # Channel to chain to after completion
     "RING_SEL":         10 << BF_POS | 1 << BF_LEN | BFUINT32, # Ring buffer wrap selector (0=read, 1=write)
-    "RING_SIZE":        6 << BF_POS | 4 << BF_LEN | BFUINT32,  # Ring buffer size (log2)
-    "INCR_WRITE":       5 << BF_POS | 1 << BF_LEN | BFUINT32, # Increment write address
-    "INCR_READ":        4 << BF_POS | 1 << BF_LEN | BFUINT32, # Increment read address
+    "RING_SIZE":        6 << BF_POS | 4 << BF_LEN | BFUINT32,  # Ring buffer size (log2) in bytes
+    "INCR_WRITE":       5 << BF_POS | 1 << BF_LEN | BFUINT32,  # Increment write address
+    "INCR_READ":        4 << BF_POS | 1 << BF_LEN | BFUINT32,  # Increment read address
     "DATA_SIZE":        2 << BF_POS | 2 << BF_LEN | BFUINT32,  # Transfer data size (byte/halfword/word)
-    "HIGH_PRIORITY":    1 << BF_POS | 1 << BF_LEN | BFUINT32, # High priority channel
+    "HIGH_PRIORITY":    1 << BF_POS | 1 << BF_LEN | BFUINT32,  # High priority channel
     "EN":               0 << BF_POS | 1 << BF_LEN | BFUINT32,  # Channel enable
 }
 
@@ -159,24 +159,6 @@ dma = struct(DMA_BASE, DMA_FIELDS)
 DMA_SIZE_BYTE     = const(0)
 DMA_SIZE_HALFWORD = const(1)
 DMA_SIZE_WORD     = const(2)
-
-# DMA_CTRL_FIELDS['RING_SIZE'] (Log2 size in bytes)
-DMA_RING_SIZE_NONE = const(0)  # No wrapping
-DMA_RING_SIZE_2B   = const(1)  # For halfword transfers
-DMA_RING_SIZE_4B   = const(2)  # For word transfers
-DMA_RING_SIZE_8B   = const(3)
-DMA_RING_SIZE_16B  = const(4)
-DMA_RING_SIZE_32B  = const(5)
-DMA_RING_SIZE_64B  = const(6)
-DMA_RING_SIZE_128B = const(7)
-DMA_RING_SIZE_256B = const(8)
-DMA_RING_SIZE_512B = const(9)
-DMA_RING_SIZE_1KB  = const(10)
-DMA_RING_SIZE_2KB  = const(11)
-DMA_RING_SIZE_4KB  = const(12)
-DMA_RING_SIZE_8KB  = const(13)
-DMA_RING_SIZE_16KB = const(14)
-DMA_RING_SIZE_32KB = const(15) # Maximum size
 
 # DMA_CTRL_FIELDS['TREQ_SEL'] (Transfer Request Select)
 # See RP2040 Datasheet Section 2.5.3.1, Table 119
