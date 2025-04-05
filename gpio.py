@@ -1,4 +1,4 @@
-#    Copyright 2023 Hessam Mehr
+#    Copyright 2023–25 Hessam Mehr
 
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -57,16 +57,16 @@ IO_QSPI_FIELDS = {
     "SD1": (0x18, GPIO_FIELDS),
     "SD2": (0x20, GPIO_FIELDS),
     "SD3": (0x28, GPIO_FIELDS),
-    "INTR": (0x30, UINT32),
-    "PROC0_INTE": (0x34, UINT32),
-    "PROC0_INTF": (0x38, UINT32),
-    "PROC0_INTS": (0x3C, UINT32),
-    "PROC1_INTE": (0x40, UINT32),
-    "PROC1_INTF": (0x44, UINT32),
-    "PROC1_INTS": (0x48, UINT32),
-    "DORMANT_WAKE_INTE": (0x40, UINT32),
-    "DORMANT_WAKE_INTF": (0x44, UINT32),
-    "DORMANT_WAKE_INTS": (0x48, UINT32),
+    "INTR": 0x30 | UINT32,
+    "PROC0_INTE": 0x34 | UINT32,
+    "PROC0_INTF": 0x38 | UINT32,
+    "PROC0_INTS": 0x3C | UINT32,
+    "PROC1_INTE": 0x40 | UINT32,
+    "PROC1_INTF": 0x44 | UINT32,
+    "PROC1_INTS": 0x48 | UINT32,
+    "DORMANT_WAKE_INTE": 0x40 | UINT32,
+    "DORMANT_WAKE_INTF": 0x44 | UINT32,
+    "DORMANT_WAKE_INTS": 0x48 | UINT32,
 }
 
 io_qspi = struct(IO_QSPI_BASE, IO_QSPI_FIELDS)

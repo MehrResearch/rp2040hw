@@ -1,4 +1,4 @@
-#    Copyright 2023 Hessam Mehr
+#    Copyright 2023-25 Hessam Mehr
 
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-from uctypes import BF_POS, BF_LEN, BFUINT32, ARRAY, UINT32, struct
+from uctypes import BF_POS, BF_LEN, UINT32, struct
 
 SYSINFO_BASE = const(0x40000000)
 
@@ -30,7 +30,7 @@ PLATFORM_FIELDS = {
 SYSINFO_FIELDS = {
     'CHIP_ID': (0x00, CHIP_ID_FIELDS),
     'PLATFORM': (0x04, PLATFORM_FIELDS),
-    'GITREF_RP2040': (0x40, UINT32),
+    'GITREF_RP2040': 0x40 | UINT32,
 }
 
 sysinfo = struct(SYSINFO_BASE, SYSINFO_FIELDS)
