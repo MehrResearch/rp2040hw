@@ -31,7 +31,7 @@ The following shows progress towards bindings for all documented RP2040 register
   - [ ] Timer (4.6.5)
   - [ ] Watchdog (4.7.6)
   - [ ] RTC (4.8.6)
-  - [ ] ADC (4.9.6)
+  - [X] ADC (4.9.6)
   - [ ] SSI (4.10.13)
 
 ## Credits
