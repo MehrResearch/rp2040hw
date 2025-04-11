@@ -27,7 +27,7 @@ The following shows progress towards bindings for all documented RP2040 register
   - [ ] UART (4.2.8)
   - [ ] I<sup>2</sup>C (4.3.17)
   - [ ] SPI (4.4.4)
-  - [ ] PWM (4.5.3)
+  - [X] PWM (4.5.3)
   - [ ] Timer (4.6.5)
   - [ ] Watchdog (4.7.6)
   - [ ] RTC (4.8.6)
