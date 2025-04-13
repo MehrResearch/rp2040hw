@@ -32,7 +32,7 @@ CS_FIELDS = {
 # FIFO control and status
 FCS_FIELDS = {
     "THRESH": 24 << BF_POS | 4 << BF_LEN | BFUINT32, # DREQ/IRQ when level>=threshold
-    "LEVEL": 16 << BF_POS | 5 << BF_LEN | BFUINT32, # Current results in FIFO
+    "LEVEL": 16 << BF_POS | 4 << BF_LEN | BFUINT32, # Current results in FIFO
     "OVER": 11 << BF_POS | 1 << BF_LEN | BFUINT32, # Write to clear FIFO overflow
     "UNDER": 10 << BF_POS | 1 << BF_LEN | BFUINT32, # Write to clear FIFO underflow
     "FULL": 9 << BF_POS | 1<< BF_LEN | BFUINT32, # Read only

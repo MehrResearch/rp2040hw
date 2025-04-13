@@ -15,7 +15,7 @@ CSR_FIELDS = {
 # Counting rate = System clock / (INT + FRAC/16)
 DIV_FIELDS = {
     "INT": 4 << BF_POS | 8 << BF_LEN | BFUINT32,
-    "FRAC": 0 << BF_POS | 16 << BF_LEN | BFUINT32,
+    "FRAC": 0 << BF_POS | 4 << BF_LEN | BFUINT32,
 }
 
 CC_FIELDS = {
