@@ -35,7 +35,7 @@ CTRL_FIELDS = {
     "INOVER": 16 << BF_POS | 2 << BF_LEN | BFUINT32,
     "OEOVER": 12 << BF_POS | 2 << BF_LEN | BFUINT32,
     "OUTOVER": 8 << BF_POS | 2 << BF_LEN | BFUINT32,
-    "FUNCSEL": 0 << BF_POS | 4 << BF_LEN | BFUINT32,
+    "FUNCSEL": 0 << BF_POS | 5 << BF_LEN | BFUINT32,
 }
 
 GPIO_FIELDS = {
@@ -72,7 +72,7 @@ IO_QSPI_FIELDS = {
 io_qspi = struct(IO_QSPI_BASE, IO_QSPI_FIELDS)
 
 IO_BANK0_FIELDS = {
-    "GPIOS": (0x000 | ARRAY, 30, GPIO_FIELDS),
+    "GPIO": (0x000 | ARRAY, 30, GPIO_FIELDS),
     "INTR": (0x0F0 | ARRAY, 4 | UINT32),
     "PROC0_INTE": (0x100 | ARRAY, 4 | UINT32),
     "PROC0_INTF": (0x110 | ARRAY, 4 | UINT32),
@@ -88,18 +88,18 @@ IO_BANK0_FIELDS = {
 io_bank0 = struct(IO_BANK0_BASE, IO_BANK0_FIELDS)
 
 GPIO_PAD_FIELDS = {
-    "OD": 7 << BF_POS | 1 << BF_LEN | UINT32,
-    "IE": 6 << BF_POS | 1 << BF_LEN | UINT32,
-    "DRIVE": 4 << BF_POS | 2 << BF_LEN | UINT32,
-    "PUE": 3 << BF_POS | 1 << BF_LEN | UINT32,
-    "PDE": 2 << BF_POS | 1 << BF_LEN | UINT32,
+    "OD": 7 << BF_POS | 1 << BF_LEN | UINT32, # Output disable
+    "IE": 6 << BF_POS | 1 << BF_LEN | UINT32, # Input enable
+    "DRIVE": 4 << BF_POS | 2 << BF_LEN | UINT32, # Drive strength, see PADS_DRIVE_*
+    "PUE": 3 << BF_POS | 1 << BF_LEN | UINT32, # Pull-up enable
+    "PDE": 2 << BF_POS | 1 << BF_LEN | UINT32, # Pull-down enable
     "SCHMITT": 1 << BF_POS | 1 << BF_LEN | UINT32,
     "SLEWFAST": 0 << BF_POS | 1 << BF_LEN | UINT32,
 }
 
 PADS_BANK0_FIELDS = {
     "VOLTAGE_SELECT": 0x00 | 0 << BF_POS | 1 << BF_LEN | BFUINT32,
-    "GPIO": (0x04, ARRAY, 30, GPIO_PAD_FIELDS),
+    "GPIO": (0x04 | ARRAY, 30, GPIO_PAD_FIELDS),
     "SWCLK": (0x7C, GPIO_PAD_FIELDS),
     "SWD": (0x80, GPIO_PAD_FIELDS),
 }
@@ -117,3 +117,30 @@ PADS_QSPI_FIELDS = {
 }
 
 pads_qspi = struct(PADS_QSPI_BASE, PADS_QSPI_FIELDS)
+
+# GPIO Voltage Select (for VOLTAGE_SELECT in PADS_BANK0 and PADS_QSPI)
+GPIO_VOLTAGE_3V3 = const(0) # 3.3V
+GPIO_VOLTAGE_1V8 = const(1) # 1.8V
+
+# GPIO Override Modes (for IRQOVER, INOVER, OEOVER, OUTOVER in CTRL_FIELDS)
+GPIO_OVERRIDE_NORMAL = const(0) # Drive output from peripheral/pad input is passed to peripheral
+GPIO_OVERRIDE_INVERT = const(1) # Invert output/input
+GPIO_OVERRIDE_LOW    = const(2) # Drive output low/input is low
+GPIO_OVERRIDE_HIGH   = const(3) # Drive output high/input is high
+
+GPIO_FUNC_XIP         = const(0)
+GPIO_FUNC_SPI         = const(1)
+GPIO_FUNC_UART        = const(2)
+GPIO_FUNC_I2C         = const(3)
+GPIO_FUNC_PWM         = const(4)
+GPIO_FUNC_SIO         = const(5) # Software control via SIO registers
+GPIO_FUNC_PIO0        = const(6) # Programmable IO block 0
+GPIO_FUNC_PIO1        = const(7) # Programmable IO block 1
+GPIO_FUNC_GPCK        = const(8) # General purpose clock output
+GPIO_FUNC_USB         = const(9) # USB VBUS detect/overcurrent
+GPIO_FUNC_NULL        = const(31) # Default, disables connection to peripheral
+
+PADS_DRIVE_2MA  = const(0)
+PADS_DRIVE_4MA  = const(1)
+PADS_DRIVE_8MA  = const(2)
+PADS_DRIVE_12MA = const(3)
