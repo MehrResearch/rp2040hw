@@ -13,11 +13,18 @@
 #    limitations under the License.
 
 from uctypes import BF_POS, BF_LEN, BFUINT32, ARRAY, UINT32, struct
+from rp2040hw.util import RP2350
 
-IO_BANK0_BASE   = const(0x40014000)
-IO_QSPI_BASE    = const(0x40018000)
-PADS_BANK0_BASE = const(0x4001c000)
-PADS_QSPI_BASE  = const(0x40020000)
+if RP2350:
+    IO_BANK0_BASE   = 0x40028000
+    IO_QSPI_BASE    = 0x40030000
+    PADS_BANK0_BASE = 0x40038000
+    PADS_QSPI_BASE  = 0x40040000
+else:
+    IO_BANK0_BASE   = 0x40014000
+    IO_QSPI_BASE    = 0x40018000
+    PADS_BANK0_BASE = 0x4001c000
+    PADS_QSPI_BASE  = 0x40020000
 
 STATUS_FIELDS = {
     "IRQTOPROC": 26 << BF_POS | 1 << BF_LEN | BFUINT32,
@@ -30,13 +37,22 @@ STATUS_FIELDS = {
     "OUTFROMPERI": 8 << BF_POS | 1 << BF_LEN | BFUINT32,
 }
 
-CTRL_FIELDS = {
-    "IRQOVER": 28 << BF_POS | 2 << BF_LEN | BFUINT32,
-    "INOVER": 16 << BF_POS | 2 << BF_LEN | BFUINT32,
-    "OEOVER": 12 << BF_POS | 2 << BF_LEN | BFUINT32,
-    "OUTOVER": 8 << BF_POS | 2 << BF_LEN | BFUINT32,
-    "FUNCSEL": 0 << BF_POS | 5 << BF_LEN | BFUINT32,
-}
+if RP2350:
+    CTRL_FIELDS = {
+        "IRQOVER": 28 << BF_POS | 2 << BF_LEN | BFUINT32,
+        "INOVER": 16 << BF_POS | 2 << BF_LEN | BFUINT32,
+        "OEOVER": 14 << BF_POS | 2 << BF_LEN | BFUINT32,
+        "OUTOVER": 12 << BF_POS | 2 << BF_LEN | BFUINT32,
+        "FUNCSEL": 0 << BF_POS | 5 << BF_LEN | BFUINT32,
+    }
+else:
+    CTRL_FIELDS = {
+        "IRQOVER": 28 << BF_POS | 2 << BF_LEN | BFUINT32,
+        "INOVER": 16 << BF_POS | 2 << BF_LEN | BFUINT32,
+        "OEOVER": 12 << BF_POS | 2 << BF_LEN | BFUINT32,
+        "OUTOVER": 8 << BF_POS | 2 << BF_LEN | BFUINT32,
+        "FUNCSEL": 0 << BF_POS | 5 << BF_LEN | BFUINT32,
+    }
 
 GPIO_FIELDS = {
     "STATUS": (0x0, STATUS_FIELDS),
