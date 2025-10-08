@@ -197,7 +197,7 @@ DMA_FIELDS = {
     # Timers
     "TIMER":            ((0x440 if RP2350 else 0x420) | ARRAY, 4, DMA_TIMER_FIELDS), # Pacing Timers 0-3
     # Miscellaneous Control
-    "MULTI_CHAN_TRIGGER": (0x450 if RP2350 else 0x430) | BFUINT32,            # Trigger multiple channels simultaneously (bitmask)
+    "MULTI_CHAN_TRIGGER": (0x450 if RP2350 else 0x430) | UINT32,            # Trigger multiple channels simultaneously (bitmask)
     "SNIFF_CTRL":       ((0x454 if RP2350 else 0x434), DMA_SNIFF_CTRL_FIELDS), # Sniffer Control
     "SNIFF_DATA":       (0x458 if RP2350 else 0x438) | UINT32,                # Sniffer Data Accumulator
     # Reserved 0x43C (RP2040), 0x45C (RP2350)
