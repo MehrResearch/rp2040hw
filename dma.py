@@ -115,8 +115,8 @@ DMA_SNIFF_CTRL_FIELDS = {
 
 # DMA FIFO Levels Register Fields (Read Only)
 DMA_FIFO_LEVELS_FIELDS = {
-    "WAF_LVL":          (16 << BF_POS | 8 << BF_LEN | BFUINT32), # Write Address FIFO level
-    "RAF_LVL":          (8 << BF_POS | 8 << BF_LEN | BFUINT32),  # Read Address FIFO level
+    "RAF_LVL":          (16 << BF_POS | 8 << BF_LEN | BFUINT32), # Write Address FIFO level
+    "WAF_LVL":          (8 << BF_POS | 8 << BF_LEN | BFUINT32),  # Read Address FIFO level
     "TDF_LVL":          (0 << BF_POS | 8 << BF_LEN | BFUINT32),  # Transfer Data FIFO level
 }
 
