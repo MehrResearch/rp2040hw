@@ -13,29 +13,51 @@
 #    limitations under the License.
 
 from uctypes import BF_POS, BF_LEN, BFUINT32, ARRAY, UINT32, struct
+from rp2040hw.util import RP2350
 
 DMA_BASE = const(0x50000000)
 
 # --- DMA Channel Control Register Fields ---
-DMA_CTRL_FIELDS = {
-    "AHB_ERROR":        31 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Logical OR of READ_ERROR and WRITE_ERROR
-    "READ_ERROR":       30 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Read bus error
-    "WRITE_ERROR":      29 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Write bus error
-    # 28:25 reserved
-    "BUSY":             24 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Channel busy status
-    "SNIFF_EN":         23 << BF_POS | 1 << BF_LEN | BFUINT32, # Enable sniffer
-    "BSWAP":            22 << BF_POS | 1 << BF_LEN | BFUINT32, # Byte swap
-    "IRQ_QUIET":        21 << BF_POS | 1 << BF_LEN | BFUINT32, # Disable IRQ generation for this channel
-    "TREQ_SEL":         15 << BF_POS | 6 << BF_LEN | BFUINT32, # Transfer Request signal select
-    "CHAIN_TO":         11 << BF_POS | 4 << BF_LEN | BFUINT32, # Channel to chain to after completion
-    "RING_SEL":         10 << BF_POS | 1 << BF_LEN | BFUINT32, # Ring buffer wrap selector (0=read, 1=write)
-    "RING_SIZE":        6 << BF_POS | 4 << BF_LEN | BFUINT32,  # Ring buffer size (log2) in bytes
-    "INCR_WRITE":       5 << BF_POS | 1 << BF_LEN | BFUINT32,  # Increment write address
-    "INCR_READ":        4 << BF_POS | 1 << BF_LEN | BFUINT32,  # Increment read address
-    "DATA_SIZE":        2 << BF_POS | 2 << BF_LEN | BFUINT32,  # Transfer data size (byte/halfword/word)
-    "HIGH_PRIORITY":    1 << BF_POS | 1 << BF_LEN | BFUINT32,  # High priority channel
-    "EN":               0 << BF_POS | 1 << BF_LEN | BFUINT32,  # Channel enable
-}
+if RP2350:
+    DMA_CTRL_FIELDS = {
+        "AHB_ERROR":        31 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Logical OR of READ_ERROR and WRITE_ERROR
+        "READ_ERROR":       30 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Read bus error
+        "WRITE_ERROR":      29 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Write bus error
+        # 28:25 reserved
+        "BUSY":             24 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Channel busy status
+        "SNIFF_EN":         23 << BF_POS | 1 << BF_LEN | BFUINT32, # Enable sniffer
+        "BSWAP":            22 << BF_POS | 1 << BF_LEN | BFUINT32, # Byte swap
+        "IRQ_QUIET":        21 << BF_POS | 1 << BF_LEN | BFUINT32, # Disable IRQ generation for this channel
+        "TREQ_SEL":         15 << BF_POS | 6 << BF_LEN | BFUINT32, # Transfer Request signal select
+        "CHAIN_TO":         11 << BF_POS | 5 << BF_LEN | BFUINT32, # Channel to chain to after completion (5 bits for 16 channels)
+        "RING_SEL":         10 << BF_POS | 1 << BF_LEN | BFUINT32, # Ring buffer wrap selector (0=read, 1=write)
+        "RING_SIZE":        6 << BF_POS | 4 << BF_LEN | BFUINT32,  # Ring buffer size (log2) in bytes
+        "INCR_WRITE":       5 << BF_POS | 1 << BF_LEN | BFUINT32,  # Increment write address
+        "INCR_READ":        4 << BF_POS | 1 << BF_LEN | BFUINT32,  # Increment read address
+        "DATA_SIZE":        2 << BF_POS | 2 << BF_LEN | BFUINT32,  # Transfer data size (byte/halfword/word)
+        "HIGH_PRIORITY":    1 << BF_POS | 1 << BF_LEN | BFUINT32,  # High priority channel
+        "EN":               0 << BF_POS | 1 << BF_LEN | BFUINT32,  # Channel enable
+    }
+else:
+    DMA_CTRL_FIELDS = {
+        "AHB_ERROR":        31 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Logical OR of READ_ERROR and WRITE_ERROR
+        "READ_ERROR":       30 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Read bus error
+        "WRITE_ERROR":      29 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Write bus error
+        # 28:25 reserved
+        "BUSY":             24 << BF_POS | 1 << BF_LEN | BFUINT32, # Read only: Channel busy status
+        "SNIFF_EN":         23 << BF_POS | 1 << BF_LEN | BFUINT32, # Enable sniffer
+        "BSWAP":            22 << BF_POS | 1 << BF_LEN | BFUINT32, # Byte swap
+        "IRQ_QUIET":        21 << BF_POS | 1 << BF_LEN | BFUINT32, # Disable IRQ generation for this channel
+        "TREQ_SEL":         15 << BF_POS | 6 << BF_LEN | BFUINT32, # Transfer Request signal select
+        "CHAIN_TO":         11 << BF_POS | 4 << BF_LEN | BFUINT32, # Channel to chain to after completion
+        "RING_SEL":         10 << BF_POS | 1 << BF_LEN | BFUINT32, # Ring buffer wrap selector (0=read, 1=write)
+        "RING_SIZE":        6 << BF_POS | 4 << BF_LEN | BFUINT32,  # Ring buffer size (log2) in bytes
+        "INCR_WRITE":       5 << BF_POS | 1 << BF_LEN | BFUINT32,  # Increment write address
+        "INCR_READ":        4 << BF_POS | 1 << BF_LEN | BFUINT32,  # Increment read address
+        "DATA_SIZE":        2 << BF_POS | 2 << BF_LEN | BFUINT32,  # Transfer data size (byte/halfword/word)
+        "HIGH_PRIORITY":    1 << BF_POS | 1 << BF_LEN | BFUINT32,  # High priority channel
+        "EN":               0 << BF_POS | 1 << BF_LEN | BFUINT32,  # Channel enable
+    }
 
 # --- DMA Channel Register Aliases ---
 # Writing to the last register in each alias struct triggers the channel.
@@ -78,10 +100,16 @@ DMA_CHANNEL_FIELDS = {
 }
 
 # DMA Interrupt Status Registers (INTR, INTE0/1, INTF0/1, INTS0/1)
-DMA_INTS_FIELDS = {
-    # Bits 0-11 for channels 0-11
-    "INTS":             (0<<BF_POS | 16<<BF_LEN | BFUINT32)
-}
+if RP2350:
+    DMA_INTS_FIELDS = {
+        # Bits 0-15 for channels 0-15 on RP2350
+        "INTS":             (0<<BF_POS | 16<<BF_LEN | BFUINT32)
+    }
+else:
+    DMA_INTS_FIELDS = {
+        # Bits 0-11 for channels 0-11 on RP2040
+        "INTS":             (0<<BF_POS | 16<<BF_LEN | BFUINT32)
+    }
 
 # DMA Timer Registers (TIMER0 - TIMER3)
 DMA_TIMER_FIELDS = {
@@ -90,14 +118,24 @@ DMA_TIMER_FIELDS = {
 }
 
 # DMA Sniffer Control Register Fields
-DMA_SNIFF_CTRL_FIELDS = {
-    "OUT_INV":          11 << BF_POS | 1 << BF_LEN | BFUINT32, # Invert sniffed data before feeding to checksum
-    "OUT_REV":          10 << BF_POS | 1 << BF_LEN | BFUINT32, # Bit-reverse sniffed data before feeding to checksum
-    "BSWAP":            9 << BF_POS | 1 << BF_LEN | BFUINT32,  # Byte swap sniffed data before feeding to checksum
-    "CALC":             5 << BF_POS | 4 << BF_LEN | BFUINT32,  # Checksum calculation type
-    "DMACH":            1 << BF_POS | 4 << BF_LEN | BFUINT32,  # DMA channel for sniffer to observe
-    "EN":               0 << BF_POS | 1 << BF_LEN | BFUINT32,  # Sniffer enable
-}
+if RP2350:
+    DMA_SNIFF_CTRL_FIELDS = {
+        "OUT_INV":          11 << BF_POS | 1 << BF_LEN | BFUINT32, # Invert sniffed data before feeding to checksum
+        "OUT_REV":          10 << BF_POS | 1 << BF_LEN | BFUINT32, # Bit-reverse sniffed data before feeding to checksum
+        "BSWAP":            9 << BF_POS | 1 << BF_LEN | BFUINT32,  # Byte swap sniffed data before feeding to checksum
+        "CALC":             5 << BF_POS | 4 << BF_LEN | BFUINT32,  # Checksum calculation type
+        "DMACH":            1 << BF_POS | 5 << BF_LEN | BFUINT32,  # DMA channel for sniffer to observe (5 bits for 16 channels)
+        "EN":               0 << BF_POS | 1 << BF_LEN | BFUINT32,  # Sniffer enable
+    }
+else:
+    DMA_SNIFF_CTRL_FIELDS = {
+        "OUT_INV":          11 << BF_POS | 1 << BF_LEN | BFUINT32, # Invert sniffed data before feeding to checksum
+        "OUT_REV":          10 << BF_POS | 1 << BF_LEN | BFUINT32, # Bit-reverse sniffed data before feeding to checksum
+        "BSWAP":            9 << BF_POS | 1 << BF_LEN | BFUINT32,  # Byte swap sniffed data before feeding to checksum
+        "CALC":             5 << BF_POS | 4 << BF_LEN | BFUINT32,  # Checksum calculation type
+        "DMACH":            1 << BF_POS | 4 << BF_LEN | BFUINT32,  # DMA channel for sniffer to observe
+        "EN":               0 << BF_POS | 1 << BF_LEN | BFUINT32,  # Sniffer enable
+    }
 
 # DMA FIFO Levels Register Fields (Read Only)
 DMA_FIFO_LEVELS_FIELDS = {
@@ -107,10 +145,16 @@ DMA_FIFO_LEVELS_FIELDS = {
 }
 
 # DMA Channel Abort Register Fields
-DMA_CHAN_ABORT_FIELDS = {
-    # Bits 0-11 for RP2040 channels 0-11
-    "ABORT":            (0 << BF_POS | 16 << BF_LEN | BFUINT32)
-}
+if RP2350:
+    DMA_CHAN_ABORT_FIELDS = {
+        # Bits 0-15 for RP2350 channels 0-15
+        "ABORT":            (0 << BF_POS | 16 << BF_LEN | BFUINT32)
+    }
+else:
+    DMA_CHAN_ABORT_FIELDS = {
+        # Bits 0-11 for RP2040 channels 0-11
+        "ABORT":            (0 << BF_POS | 16 << BF_LEN | BFUINT32)
+    }
 
 # DMA Debug Channel Trigger Request Counter Fields (Read Only)
 DMA_DBG_CTDREQ_FIELDS = {
@@ -125,32 +169,60 @@ DMA_DEBUG_CHANNEL_FIELDS = {
 
 
 # --- Main DMA Peripheral Structure Definition ---
-DMA_FIELDS = {
-    # Channels 0-11 (Array stride ensures correct 0x40 spacing)
-    "CH":               (0x000 | ARRAY, 12, DMA_CHANNEL_FIELDS),
-    # Interrupt Registers
-    "INTR":             (0x400, DMA_INTS_FIELDS),       # Raw Interrupt Status
-    "INTE0":            (0x404, DMA_INTS_FIELDS),       # Interrupt Enables for IRQ 0
-    "INTF0":            (0x408, DMA_INTS_FIELDS),       # Interrupt Force for IRQ 0
-    "INTS0":            (0x40C, DMA_INTS_FIELDS),       # Interrupt Status for IRQ 0 (masked & forced)
-    # Reserved 0x410
-    "INTE1":            (0x414, DMA_INTS_FIELDS),       # Interrupt Enables for IRQ 1
-    "INTF1":            (0x418, DMA_INTS_FIELDS),       # Interrupt Force for IRQ 1
-    "INTS1":            (0x41C, DMA_INTS_FIELDS),       # Interrupt Status for IRQ 1 (masked & forced)
-    # Timers
-    "TIMER":            (0x420 | ARRAY, 4, DMA_TIMER_FIELDS), # Pacing Timers 0-3
-    # Miscellaneous Control
-    "MULTI_CHAN_TRIGGER": 0x430 | BFUINT32,            # Trigger multiple channels simultaneously (bitmask)
-    "SNIFF_CTRL":       (0x434, DMA_SNIFF_CTRL_FIELDS), # Sniffer Control
-    "SNIFF_DATA":       0x438 | UINT32,                # Sniffer Data Accumulator
-    # Reserved 0x43C
-    "FIFO_LEVELS":      (0x440, DMA_FIFO_LEVELS_FIELDS),# (Read Only) Debug FIFO Levels
-    "CHAN_ABORT":       (0x444, DMA_CHAN_ABORT_FIELDS), # Abort channel transfers (bitmask)
-    "N_CHANNELS":       0x448 | UINT32,                # (Read Only) Number of DMA Channels implemented
-    # Reserved space 0x44C to 0x7FC
-    # Debug Registers (Array stride ensures correct 0x08 spacing)
-    "CH_DBG":           (0x800 | ARRAY, 12, DMA_DEBUG_CHANNEL_FIELDS)
-}
+if RP2350:
+    DMA_FIELDS = {
+        # Channels 0-15 for RP2350 (Array stride ensures correct 0x40 spacing)
+        "CH":               (0x000 | ARRAY, 16, DMA_CHANNEL_FIELDS),
+        # Interrupt Registers
+        "INTR":             (0x400, DMA_INTS_FIELDS),       # Raw Interrupt Status
+        "INTE0":            (0x404, DMA_INTS_FIELDS),       # Interrupt Enables for IRQ 0
+        "INTF0":            (0x408, DMA_INTS_FIELDS),       # Interrupt Force for IRQ 0
+        "INTS0":            (0x40C, DMA_INTS_FIELDS),       # Interrupt Status for IRQ 0 (masked & forced)
+        # Reserved 0x410
+        "INTE1":            (0x414, DMA_INTS_FIELDS),       # Interrupt Enables for IRQ 1
+        "INTF1":            (0x418, DMA_INTS_FIELDS),       # Interrupt Force for IRQ 1
+        "INTS1":            (0x41C, DMA_INTS_FIELDS),       # Interrupt Status for IRQ 1 (masked & forced)
+        # Timers
+        "TIMER":            (0x420 | ARRAY, 4, DMA_TIMER_FIELDS), # Pacing Timers 0-3
+        # Miscellaneous Control
+        "MULTI_CHAN_TRIGGER": 0x430 | BFUINT32,            # Trigger multiple channels simultaneously (bitmask)
+        "SNIFF_CTRL":       (0x434, DMA_SNIFF_CTRL_FIELDS), # Sniffer Control
+        "SNIFF_DATA":       0x438 | UINT32,                # Sniffer Data Accumulator
+        # Reserved 0x43C
+        "FIFO_LEVELS":      (0x440, DMA_FIFO_LEVELS_FIELDS),# (Read Only) Debug FIFO Levels
+        "CHAN_ABORT":       (0x444, DMA_CHAN_ABORT_FIELDS), # Abort channel transfers (bitmask)
+        "N_CHANNELS":       0x448 | UINT32,                # (Read Only) Number of DMA Channels implemented
+        # Reserved space 0x44C to 0x7FC
+        # Debug Registers (Array stride ensures correct 0x08 spacing)
+        "CH_DBG":           (0x800 | ARRAY, 16, DMA_DEBUG_CHANNEL_FIELDS)
+    }
+else:
+    DMA_FIELDS = {
+        # Channels 0-11 for RP2040 (Array stride ensures correct 0x40 spacing)
+        "CH":               (0x000 | ARRAY, 12, DMA_CHANNEL_FIELDS),
+        # Interrupt Registers
+        "INTR":             (0x400, DMA_INTS_FIELDS),       # Raw Interrupt Status
+        "INTE0":            (0x404, DMA_INTS_FIELDS),       # Interrupt Enables for IRQ 0
+        "INTF0":            (0x408, DMA_INTS_FIELDS),       # Interrupt Force for IRQ 0
+        "INTS0":            (0x40C, DMA_INTS_FIELDS),       # Interrupt Status for IRQ 0 (masked & forced)
+        # Reserved 0x410
+        "INTE1":            (0x414, DMA_INTS_FIELDS),       # Interrupt Enables for IRQ 1
+        "INTF1":            (0x418, DMA_INTS_FIELDS),       # Interrupt Force for IRQ 1
+        "INTS1":            (0x41C, DMA_INTS_FIELDS),       # Interrupt Status for IRQ 1 (masked & forced)
+        # Timers
+        "TIMER":            (0x420 | ARRAY, 4, DMA_TIMER_FIELDS), # Pacing Timers 0-3
+        # Miscellaneous Control
+        "MULTI_CHAN_TRIGGER": 0x430 | BFUINT32,            # Trigger multiple channels simultaneously (bitmask)
+        "SNIFF_CTRL":       (0x434, DMA_SNIFF_CTRL_FIELDS), # Sniffer Control
+        "SNIFF_DATA":       0x438 | UINT32,                # Sniffer Data Accumulator
+        # Reserved 0x43C
+        "FIFO_LEVELS":      (0x440, DMA_FIFO_LEVELS_FIELDS),# (Read Only) Debug FIFO Levels
+        "CHAN_ABORT":       (0x444, DMA_CHAN_ABORT_FIELDS), # Abort channel transfers (bitmask)
+        "N_CHANNELS":       0x448 | UINT32,                # (Read Only) Number of DMA Channels implemented
+        # Reserved space 0x44C to 0x7FC
+        # Debug Registers (Array stride ensures correct 0x08 spacing)
+        "CH_DBG":           (0x800 | ARRAY, 12, DMA_DEBUG_CHANNEL_FIELDS)
+    }
 
 # --- Create the DMA structure instance ---
 dma = struct(DMA_BASE, DMA_FIELDS)
