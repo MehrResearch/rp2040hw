@@ -6,7 +6,7 @@ from rp2040hw import gpio
 from array import array
 
 LED_PIN_NUM = 18       # GPIO pin for the LED
-DMA_CHANNEL = 0        # Choose a free DMA channel (0-11)
+DMA_CHANNEL = 0        # Choose a free DMA channel (0-11 on RP2040, 0-15 on RP2350)
 DMA_TIMER_NUM = 0      # Choose a free DMA timer (0-3)
 BLINK_FREQ_HZ = 3000   # Blink frequency in Hertz (min ~ 2000)
 
