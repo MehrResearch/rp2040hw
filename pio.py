@@ -13,14 +13,28 @@
 #    limitations under the License.
 
 from uctypes import BF_POS, BF_LEN, BFUINT32, ARRAY, UINT32, struct
+from rp2040hw.util import RP2350
 
 PIO_BASE = [0x50200000, 0x50300000]
+
+# Third PIO block on RP2350
+if RP2350:
+    PIO_BASE.append(0x50400000)
 
 PIO_CTRL_FIELDS = {
     "CLKDIV_RESTART": 8 << BF_POS | 4 << BF_LEN | BFUINT32,
     "SM_RESTART": 4 << BF_POS | 4 << BF_LEN | BFUINT32,
     "SM_ENABLE": 0 << BF_POS | 4 << BF_LEN | BFUINT32,
 }
+
+if RP2350:
+    PIO_CTRL_FIELDS.update({
+        "NEXTPREV_CLKDIV_RESTART": 26 << BF_POS | 1 << BF_LEN | BFUINT32,
+        "NEXTPREV_SM_DISABLE": 25 << BF_POS | 1 << BF_LEN | BFUINT32,
+        "NEXTPREV_SM_ENABLE": 24 << BF_POS | 1 << BF_LEN | BFUINT32,
+        "NEXT_PIO_MASK": 20 << BF_POS | 4 << BF_LEN | BFUINT32,
+        "PREV_PIO_MASK": 16 << BF_POS | 4 << BF_LEN | BFUINT32,
+    })
 
 PIO_FSTAT_FIELDS = {
     "TXEMPTY": 24 << BF_POS | 4 << BF_LEN | BFUINT32,
@@ -36,7 +50,7 @@ PIO_FDEBUG_FIELDS = {
     "RXSTALL": 0 << BF_POS | 4 << BF_LEN | BFUINT32,
 }
 
-PIO_FLVEL_FIELDS = {
+PIO_FLEVEL_FIELDS = {
     "RX3": 28 << BF_POS | 4 << BF_LEN | BFUINT32,
     "TX3": 24 << BF_POS | 4 << BF_LEN | BFUINT32,
     "RX2": 20 << BF_POS | 4 << BF_LEN | BFUINT32,
@@ -53,6 +67,11 @@ DBG_CFGINFO_FIELDS = {
     "FIFO_DEPTH": 0 << BF_POS | 6 << BF_LEN | BFUINT32,
 }
 
+if RP2350:
+    DBG_CFGINFO_FIELDS.update({
+        "VERSION": 28 << BF_POS | 4 << BF_LEN | BFUINT32,
+    })
+
 CLKDIV_FIELDS = {
     "INT": 16 << BF_POS | 16 << BF_LEN | BFUINT32,
     "FRAC": 8 << BF_POS | 8 << BF_LEN | BFUINT32,
@@ -68,8 +87,8 @@ EXECCTRL_FIELDS = {
     "OUT_STICKY": 17 << BF_POS | 1 << BF_LEN | BFUINT32,
     "WRAP_TOP": 12 << BF_POS | 5 << BF_LEN | BFUINT32,
     "WRAP_BOTTOM": 7 << BF_POS | 5 << BF_LEN | BFUINT32,
-    "STATUS_SEL": 4 << BF_POS | 1 << BF_LEN | BFUINT32,
-    "STATUS_N": 0 << BF_POS | 4 << BF_LEN | BFUINT32,
+    "STATUS_SEL": (5 if RP2350 else 4) << BF_POS | (2 if RP2350 else 1) << BF_LEN | BFUINT32,
+    "STATUS_N": 0 << BF_POS | (5 if RP2350 else 4) << BF_LEN | BFUINT32,
 }
 
 SHIFTCTRL_FIELDS = {
@@ -83,17 +102,24 @@ SHIFTCTRL_FIELDS = {
     "AUTOPUSH": 16 << BF_POS | 1 << BF_LEN | BFUINT32,
 }
 
+if RP2350:
+    SHIFTCTRL_FIELDS.update({
+        "FJOIN_RX_PUT": 15 << BF_POS | 1 << BF_LEN | BFUINT32,
+        "FJOIN_RX_GET": 14 << BF_POS | 1 << BF_LEN | BFUINT32,
+        "IN_COUNT": 0 << BF_POS | 5 << BF_LEN | BFUINT32,
+    })
+
 PINCTRL_FIELDS = {
     "SIDESET_COUNT": 29 << BF_POS | 3 << BF_LEN | BFUINT32,
     "SET_COUNT": 26 << BF_POS | 3 << BF_LEN | BFUINT32,
     "OUT_COUNT": 20 << BF_POS | 6 << BF_LEN | BFUINT32,
     "IN_BASE": 15 << BF_POS | 5 << BF_LEN | BFUINT32,
-    "SIDE_BASE": 10 << BF_POS | 5 << BF_LEN | BFUINT32,
+    "SIDESET_BASE": 10 << BF_POS | 5 << BF_LEN | BFUINT32,
     "SET_BASE": 5 << BF_POS | 5 << BF_LEN | BFUINT32,
     "OUT_BASE": 0 << BF_POS | 5 << BF_LEN | BFUINT32,
 }
 
-SM_FILEDS = {
+SM_FIELDS = {
     "CLKDIV": (0x00, CLKDIV_FIELDS),
     "EXECCTRL": (0x04, EXECCTRL_FIELDS),
     "SHIFTCTRL": (0x08, SHIFTCTRL_FIELDS),
@@ -104,7 +130,7 @@ SM_FILEDS = {
 
 
 INTR_FIELDS = {
-    "SM": 8 << BF_POS | 4 << BF_LEN | BFUINT32,
+    "SM": 8 << BF_POS | (8 if RP2350 else 4) << BF_LEN | BFUINT32,
     "TXNFULL": 4 << BF_POS | 4 << BF_LEN | BFUINT32,
     "RXNEMPTY": 0 << BF_POS | 4 << BF_LEN | BFUINT32,
 }
@@ -119,7 +145,7 @@ PIO_REGS = {
     "CTRL": (0x000, PIO_CTRL_FIELDS),
     "FSTAT": (0x004, PIO_FSTAT_FIELDS),
     "FDEBUG": (0x008, PIO_FDEBUG_FIELDS),
-    "FLEVEL": (0x00C, PIO_FLVEL_FIELDS),
+    "FLEVEL": (0x00C, PIO_FLEVEL_FIELDS),
     "TXF": (0x010 | ARRAY, 4 | UINT32),
     "RXF": (0x020 | ARRAY, 4 | UINT32),
     "IRQ": 0x030 | 0 << BF_POS | 8 << BF_LEN | BFUINT32,
@@ -128,13 +154,17 @@ PIO_REGS = {
     "DBG_PADOUT": 0x03C | BFUINT32,
     "DBG_PADOE": 0x040 | BFUINT32,
     "DBG_CFGINFO": (0x044, DBG_CFGINFO_FIELDS),
-    "INSR_MEM": (0x048 | ARRAY, 32, 16 << BF_LEN | BFUINT32),
-    "SM": (0x0C8 | ARRAY, 4, SM_FILEDS),
-    "INTR": (0x128, INTR_FIELDS),
-    "IRQ": (0x12C | ARRAY, 2, IRQ_FIELDS),
-    "IRQ0": (0x12C, IRQ_FIELDS),
-    "IRQ1": (0x138, IRQ_FIELDS),
+    "INSTR_MEM": (0x048 | ARRAY, 32, 16 << BF_LEN | BFUINT32),
+    "SM": (0x0C8 | ARRAY, 4, SM_FIELDS),
+    "INTR": (0x16C if RP2350 else 0x128, INTR_FIELDS),
+    "IRQ": ((0x170 if RP2350 else 0x12C) | ARRAY, 2, IRQ_FIELDS),
 }
+
+if RP2350:
+    PIO_REGS.update({
+        "RXF_PUTGET": (0x128 | ARRAY, 16, UINT32),
+        "GPIOBASE": 0x168 | UINT32,
+})
 
 pios = [struct(addr, PIO_REGS) for addr in PIO_BASE]
 
