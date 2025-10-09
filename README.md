@@ -5,8 +5,9 @@ Low-level access to RP2040 hardware registers in MicroPython using uctypes
 The Raspberry Pi RP2040 microcontroller powers a range of versatile and very powerful development boards, including the [Raspberry Pi Pico] and the [Pimoroni Tiny 2040].The RP2040 Python SDK doesn't cover the chip's full hardware capabilities. Direct register access using the modules in this package allows full control of RP2040's low-level operations using Micropython.
 
 ## Status
-The following shows progress towards bindings for all documented RP2040 registers, with [datasheet] sections shown in brackets. Please feel free to contribute new bindings or open an issue/submit a PR if you find any bugs.
+The following shows progress towards bindings for all documented [RP2040][rp2040datasheet]/[RP2350][rp2350datasheet] registers, with sections shown in brackets. Please feel free to contribute new bindings or open an issue/submit a PR if you find any bugs.
 
+### RP2040
 - Core
   - [ ] Bus fabric (2.1.5)
   - [ ] Cortex-M0+  (2.4.8)
@@ -34,6 +35,11 @@ The following shows progress towards bindings for all documented RP2040 register
   - [X] ADC (4.9.6)
   - [ ] SSI (4.10.13)
 
+### RP2350
+Modules specifically adapted for the RP2350.
+- [X] PIO (11.7)
+- [X] DMA (12.6.10)
+
 ## Credits
 - [jbentham] for implementing uctypes access to some of RP2040's registers ([here][rp_devices]), which inspired this project.
 
@@ -41,4 +47,5 @@ The following shows progress towards bindings for all documented RP2040 register
 [rp_devices]: https://github.com/jbentham/pico/blob/main/rp_devices.py
 [Raspberry Pi Pico]: https://www.raspberrypi.org/products/raspberry-pi-pico/
 [Pimoroni Tiny 2040]: https://shop.pimoroni.com/products/tiny-2040
-[datasheet]: https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf
+[rp2040datasheet]: https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf
+[rp2350datasheet]: https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf
