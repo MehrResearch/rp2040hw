@@ -25,7 +25,7 @@ The following shows progress towards bindings for all documented [RP2040][rp2040
 - [X] PIO (3.7)
 - Peripherals
   - [ ] USB (4.1.4)
-  - [ ] UART (4.2.8)
+  - [X] UART (4.2.8)
   - [ ] I<sup>2</sup>C (4.3.17)
   - [ ] SPI (4.4.4)
   - [X] PWM (4.5.3)
@@ -38,6 +38,7 @@ The following shows progress towards bindings for all documented [RP2040][rp2040
 ### RP2350
 Modules specifically adapted for the RP2350.
 - [X] PIO (11.7)
+- [X] UART (12.1.8)
 - [X] DMA (12.6.10)
 
 ## Credits
