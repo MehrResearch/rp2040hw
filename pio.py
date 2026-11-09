@@ -14,6 +14,7 @@
 
 from uctypes import BF_POS, BF_LEN, BFUINT32, ARRAY, UINT32, struct
 from rp2040hw.util import RP2350
+from math import isfinite
 
 PIO_BASE = [0x50200000, 0x50300000]
 
@@ -123,8 +124,8 @@ SM_FIELDS = {
     "CLKDIV": (0x00, CLKDIV_FIELDS),
     "EXECCTRL": (0x04, EXECCTRL_FIELDS),
     "SHIFTCTRL": (0x08, SHIFTCTRL_FIELDS),
-    "ADDR": (0x0C | ARRAY, 4 | 4 << BF_LEN | BFUINT32),
-    "INSTR": (0x10 | ARRAY, 4 | 16 << BF_LEN | BFUINT32),
+    "ADDR": 0x0C | 0 << BF_POS | 5 << BF_LEN | BFUINT32,
+    "INSTR": 0x10 | 0 << BF_POS | 16 << BF_LEN | BFUINT32,
     "PINCTRL": (0x14, PINCTRL_FIELDS),
 }
 
@@ -148,16 +149,18 @@ PIO_REGS = {
     "FLEVEL": (0x00C, PIO_FLEVEL_FIELDS),
     "TXF": (0x010 | ARRAY, 4 | UINT32),
     "RXF": (0x020 | ARRAY, 4 | UINT32),
-    "IRQ": 0x030 | 0 << BF_POS | 8 << BF_LEN | BFUINT32,
+    "IRQ_FLAGS": 0x030 | 0 << BF_POS | 8 << BF_LEN | BFUINT32,
     "IRQ_FORCE": 0x034 | 0 << BF_POS | 8 << BF_LEN | BFUINT32,
     "INPUT_SYNC_BYPASS": 0x038 | BFUINT32,
     "DBG_PADOUT": 0x03C | BFUINT32,
     "DBG_PADOE": 0x040 | BFUINT32,
     "DBG_CFGINFO": (0x044, DBG_CFGINFO_FIELDS),
-    "INSTR_MEM": (0x048 | ARRAY, 32, 16 << BF_LEN | BFUINT32),
+    "INSTR_MEM": (0x048 | ARRAY, 32 | UINT32),
     "SM": (0x0C8 | ARRAY, 4, SM_FIELDS),
     "INTR": (0x16C if RP2350 else 0x128, INTR_FIELDS),
     "IRQ": ((0x170 if RP2350 else 0x12C) | ARRAY, 2, IRQ_FIELDS),
+    "IRQ0": (0x170 if RP2350 else 0x12C, IRQ_FIELDS),
+    "IRQ1": (0x17C if RP2350 else 0x138, IRQ_FIELDS),
 }
 
 if RP2350:
@@ -168,13 +171,20 @@ if RP2350:
 
 pios = [struct(addr, PIO_REGS) for addr in PIO_BASE]
 
-def clkdiv(target_freq, clk_freq=125e6):
+def clkdiv(target_freq, clk_freq=None):
     """
     Calculate the integer and fractional dividers for a given target frequency
-    and clock frequency (default 125MHz).
+    and clock frequency (default: the current machine.freq()). The integer
+    field encodes 65536 as zero, as required by the RP2 hardware.
     """
+    if clk_freq is None:
+        from machine import freq
+        clk_freq = freq()
+    if (not isinstance(target_freq,(int,float)) or not isfinite(target_freq) or target_freq<=0
+            or not isinstance(clk_freq,(int,float)) or not isfinite(clk_freq) or clk_freq<=0):
+        raise ValueError('clock and target frequencies must be finite and positive')
     divider = clk_freq / target_freq
-    assert 1 <= divider <= 65536
-    int_divider = int(divider)
-    frac_divider = int((divider - int_divider) * 256)
-    return (int_divider, frac_divider)
+    if not 1 <= divider <= 65536:
+        raise ValueError('PIO clock divider must be between 1 and 65536')
+    fixed = int(divider * 256)
+    return ((fixed >> 8) & 0xffff, fixed & 255)

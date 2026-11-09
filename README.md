@@ -1,6 +1,24 @@
 # rp2040hw
 Low-level access to RP2040 hardware registers in MicroPython using uctypes
 
+PIO and DMA select RP2040/RP2350 layouts using the running chip identity. In PIO,
+`SM[i].ADDR` and `SM[i].INSTR` are scalar registers (including all five PC bits),
+and `SM` entries have the hardware's 24-byte stride. Instruction-memory words
+have a 4-byte stride. `IRQ_FLAGS` exposes the raw flags without colliding with the
+existing `IRQ[0/1]` interrupt-controller views; `IRQ0`/`IRQ1` name those views too.
+`clkdiv(target)` uses the current `machine.freq()` unless an explicit source clock
+is supplied, and encodes the hardware's divider-65536 case as `(0, 0)`.
+
+DMA request constants include PIO2 and the RP2350 peripheral-number shifts. The
+RP2350 `DREQ_XIP_QMITX`/`DREQ_XIP_QMIRX` names describe its QMI peripheral; legacy
+SSITX/SSIRX names retain the corresponding numeric slots for compatibility.
+
+Run host descriptor checks with `python -m unittest discover -s tests`. The
+`tests/hardware_pio.py` script checks actual uctypes strides, five-bit PCs, clock
+registers and raw IRQ flags on all state machines without driving any output pins.
+Only PIO and DMA are adapted for RP2350; the other peripheral modules remain
+RP2040-specific as listed below.
+
 ## What's it good for?
 The Raspberry Pi RP2040 microcontroller powers a range of versatile and very powerful development boards, including the [Raspberry Pi Pico] and the [Pimoroni Tiny 2040].The RP2040 Python SDK doesn't cover the chip's full hardware capabilities. Direct register access using the modules in this package allows full control of RP2040's low-level operations using Micropython.
 
